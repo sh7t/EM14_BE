@@ -1,132 +1,7 @@
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
 
-
 // 1.
-
-/*
-function checkEmptyString(str: string): boolean {
-    return str.trim().length === 0;
-}
-
-// ----------------------------------------
-
-let name: string = prompt("Your name: ");
-if (checkEmptyString(name)) {
-    console.log("Ain't entered your name");
-    process.exit();
-}
-
-let lastName: string = prompt("Your family name: ");
-if (checkEmptyString(lastName)) {
-    console.log("Ain't entered your family name");
-    process.exit();
-}
-
-const user = {
-    fullName: name + " " + lastName,
-}
-console.log(user.fullName);
-*/
-
-// 2.
-
-/*
-function compareConstWithInput(constant: string, userInput: string): boolean {
-    return userInput === constant;
-}
-
-// ----------------------------------------
-
-let login = prompt("Login: ");
-
-let password = prompt("Password: ");
-
-if (compareConstWithInput("admin", login) && compareConstWithInput("12345", password)) {
-    console.log("Successfully logged in");
-} else {
-    console.log("Access denied");
-}
-*/
-
-
-// 3.
-
-/*
-function checkStringSuitability(str: string): boolean {
-    return str.trim().length > 5;
-}
-
-function checkPriceSuitability(num: number): boolean {
-    return num > 0;
-}
-
-// ----------------------------------------
-
-let productName: string = prompt("Product name: ");
-if (!checkStringSuitability(productName)) {
-    console.log("Ain't appropriate product name");
-    process.exit();
-}
-
-let productDescription: string = prompt("Product description: ");
-if (!checkStringSuitability(productDescription)) {
-    console.log("Ain't appropriate product description");
-    process.exit();
-}
-
-let productPrice: number = Number(prompt("Product price: "));
-if (!checkPriceSuitability(productPrice)) {
-    console.log("Ain't appropriate product price");
-    process.exit();
-}
-
-const product = {
-    name: productName,
-    description: productDescription,
-    price: productPrice,
-}
-
-console.log(`${product.name}: ${product.description}.\nPrice: ${product.price}`);
-*/
-
-// 4.
-
-/*
-function checkHeightSuitability(height: number): boolean {
-    return height > 60 && height < 280; // зріст найменшої і найвищої людей з похибкою
-}
-function checkWeightSuitability(weight: number): boolean {
-    return weight > 0 && weight < 730; // вага найлегшої і найващої людей з похибкою
-}
-function analyseBodyMassIndexAppropriability(bmi: number): void {
-    if (bmi >= 18.5 && bmi <= 24.9) {
-        console.log("Norm");
-    } else {
-        bmi < 18.5 ? console.log("Insufficient weight") : console.log("Excessive weight");
-    }
-}
-
-// ----------------------------------------
-
-let height: number = Number(prompt("Your height in centimeters: "))
-if (!checkHeightSuitability(height)) {
-    console.log("Ain't appropriate height");
-    process.exit();
-}
-
-let weight: number = Number(prompt("Your weight in kilograms: "))
-if (!checkHeightSuitability(height)) {
-    console.log("Ain't appropriate height");
-    process.exit();
-}
-
-let bmi: number = Math.round(weight / Math.pow((height/100), 2))
-
-analyseBodyMassIndexAppropriability(bmi)
-*/
-
-// 5.
 
 /*
 
@@ -190,7 +65,23 @@ let currentUser: User = {
 console.log(`\nRegistered user:\nEmail: ${currentUser.email}\nPassword: ${currentUser.password}\nBirthday: ${currentUser.birthday}`);
 */
 
-// 7.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 4.
 
 /*
 interface Temperature {
