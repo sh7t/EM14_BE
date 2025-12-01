@@ -4,65 +4,68 @@ const prompt = promptSync();
 // 1.
 
 /*
-
-interface User {
-    email: string;
-    password: string;
-    birthday: string;
+function checkEmailSuitability(email: string): void {
+    if (!(email.length > 8 && email.includes('@') && email.includes('.'))) {
+        throw new Error("Invalid email. Expected real email address.");
+    }
 }
-
-// ----------------------------------------
-
-function checkEmailSuitability(email: string): boolean {
-    return email.trim().length > 8 && email.includes('@') && email.includes('.');
-}
-function checkPasswordSuitability(password: string): boolean {
+function checkPasswordSuitability(password: string): void {
     let repeatedChars: number = 0;
     for (let char of password) {
         if (char === password[0]) {
             repeatedChars++;
         }
     }
-
-    return password.trim().length > 8 && password.trim().length < 16 && (password.trim().length != repeatedChars);
+    if (!(password.length > 8 && password.length < 16 && (password.length != repeatedChars))) {
+        throw new Error("Expected password has to be from 8 up to 16 characters and unrepeatable.");
+    }
 }
-function checkAgeSuitability(birthDate: string): boolean {
+function checkAgeSuitability(birthDate: string): void {
     let birthday: Date = new Date(
         Number(birthDate.slice(6)),
         Number(birthDate.slice(3, 5)),
         Number(birthDate.slice(0, 2)));
 
     let age: number = new Date().getFullYear() - birthday.getFullYear();
-    return age >= 18 && age < 100;
+
+    if (age < 18 && age >= 100) {
+        throw new Error("Inappropriate age.");
+    }
 }
 
 // ----------------------------------------
 
-let email: string = prompt("Your email: ");
-if (!checkEmailSuitability(email)) {
-    console.log("Ain't appropriate email");
-    process.exit();
+interface User {
+    email: string;
+    password: string;
+    birthday: string;
+    showUser: () => void
 }
 
-let password: string = prompt("Your password: ");
-if (!checkPasswordSuitability(password)) {
-    console.log("Ain't appropriate password");
-    process.exit();
-}
+// ----------------------------------------
 
-let birthday: string = prompt("Birthday(dd.mm.yyyy): ");
-if (!checkAgeSuitability(birthday)) {
-    console.log("Ain't adult");
-    process.exit();
-}
+try {
+    let email: string = prompt("Your email: ").trim();
+    checkEmailSuitability(email)
 
-let currentUser: User = {
-    email: email,
-    password: password,
-    birthday: birthday
-}
+    let password: string = prompt("Your password: ").trim();
+    checkPasswordSuitability(password)
 
-console.log(`\nRegistered user:\nEmail: ${currentUser.email}\nPassword: ${currentUser.password}\nBirthday: ${currentUser.birthday}`);
+    let birthday: string = prompt("Birthday(dd.mm.yyyy): ").trim();
+    checkAgeSuitability(birthday)
+
+    let currentUser: User = {
+        email: email,
+        password: password,
+        birthday: birthday,
+        showUser: function(): void {
+            console.log(`\nRegistered user:\nEmail: ${this.email}\nPassword: ${this.password}\nBirthday: ${this.birthday}`);
+        }
+    }
+    currentUser.showUser();
+} catch (Error) {
+    console.error("Error occurred: " + Error.message);
+}
 */
 
 // 2.
@@ -223,13 +226,6 @@ try {
 // 4.
 
 /*
-interface Temperature {
-    temperatureValue: number;
-    unit: string;
-}
-
-// ----------------------------------------
-
 function convertTemperature(temperature: number, unit: string): Temperature {
     if (unit === "C") {
         return {
@@ -242,15 +238,16 @@ function convertTemperature(temperature: number, unit: string): Temperature {
             unit: "C"
         }
     } else {
-        console.log("Invalid temperature value or temperature unit of measurement.");
-        process.exit();
+        throw new Error("Invalid temperature unit \"" + unit + "\" of measurement.");
     }
 
 
 }
-
 function analyzeConvertTemperature(temperature: string): void {
     let temperatureValue: number = Number(temperature.slice(0, temperature.length-2));
+    if (isNaN(temperatureValue) || temperatureValue === 0) {
+        throw new Error("Invalid temperature value");
+    }
     let unit: string = temperature[temperature.length-1];
 
     let convertedTemperature: Temperature = convertTemperature(temperatureValue, unit);
@@ -260,7 +257,17 @@ function analyzeConvertTemperature(temperature: string): void {
 
 // ----------------------------------------
 
-let temperature: string = prompt("Temperature(e.g. 100 C, 32 F): ").trim()
+interface Temperature {
+    temperatureValue: number;
+    unit: string;
+}
 
-analyzeConvertTemperature(temperature);
+// ----------------------------------------
+
+try {
+    let temperature: string = prompt("Temperature(e.g. 100 C, 32 F): ").trim()
+    analyzeConvertTemperature(temperature);
+} catch (Error) {
+    console.error("Error occurred: " + Error.message);
+}
 */
