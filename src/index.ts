@@ -1,273 +1,157 @@
 import promptSync from 'prompt-sync';
+import bands from './bands.json'
+
 const prompt = promptSync();
+const bandsList: MusicBand[] = bands;
+
+type MusicBand = {
+    name: string;
+    genre: string;
+    members: BandMember[];
+    originCountry: string;
+    foundedYear: number;
+    trackCount: number;
+}
+
+interface BandMember {
+    name: string;
+    instrument: string;
+}
 
 // 1.
-
-/*
-function checkEmailSuitability(email: string): void {
-    if (!(email.length > 8 && email.includes('@') && email.includes('.'))) {
-        throw new Error("Invalid email. Expected real email address.");
+const onlyNames = bandsList.map((band) => {
+    return {
+        name: band.name
     }
-}
-function checkPasswordSuitability(password: string): void {
-    let repeatedChars: number = 0;
-    for (let char of password) {
-        if (char === password[0]) {
-            repeatedChars++;
-        }
-    }
-    if (!(password.length > 8 && password.length < 16 && (password.length != repeatedChars))) {
-        throw new Error("Expected password has to be from 8 up to 16 characters and unrepeatable.");
-    }
-}
-function checkAgeSuitability(birthDate: string): void {
-    let birthday: Date = new Date(
-        Number(birthDate.slice(6)),
-        Number(birthDate.slice(3, 5)),
-        Number(birthDate.slice(0, 2)));
-
-    let age: number = new Date().getFullYear() - birthday.getFullYear();
-
-    if (age < 18 && age >= 100) {
-        throw new Error("Inappropriate age.");
-    }
-}
-
-// ----------------------------------------
-
-interface User {
-    email: string;
-    password: string;
-    birthday: string;
-    showUser: () => void
-}
-
-// ----------------------------------------
-
-try {
-    let email: string = prompt("Your email: ").trim();
-    checkEmailSuitability(email)
-
-    let password: string = prompt("Your password: ").trim();
-    checkPasswordSuitability(password)
-
-    let birthday: string = prompt("Birthday(dd.mm.yyyy): ").trim();
-    checkAgeSuitability(birthday)
-
-    let currentUser: User = {
-        email: email,
-        password: password,
-        birthday: birthday,
-        showUser: function(): void {
-            console.log(`\nRegistered user:\nEmail: ${this.email}\nPassword: ${this.password}\nBirthday: ${this.birthday}`);
-        }
-    }
-    currentUser.showUser();
-} catch (Error) {
-    console.error("Error occurred: " + Error.message);
-}
-*/
+});
 
 // 2.
-
-/*
-function ShowKeyValueStructure(key: string, value: any): void {
-    console.log(key + ": " + value);
-}
-
-function checkNameSuitability(name: string): void {
-    if (!(name.length >= 2 && name.length <= 50)) {
-        throw new Error('Invalid name. Expected a name from 2 to 50 characters long!');
-    }
-}
-
-function checkPhoneNumberSuitability(phoneNumber: string): void {
-    let isAllNumbers: boolean = true;
-
-    for (let i: number = 1; i < phoneNumber.length; i++) {
-        if (isNaN(Number(phoneNumber[i]))) {
-            isAllNumbers = false;
-            break;
-        }
-    }
-
-    if (!isAllNumbers || !(phoneNumber.length >= 10 && phoneNumber.length <= 13) || phoneNumber[0] !== '+') {
-        throw new Error("Invalid phone number. Expected a real phone number.");
-    }
-}
-
-function checkPostalIndexSuitability(postalIndex: number): void {
-    if (postalIndex.toString().length !== 5 || isNaN(postalIndex)) {
-        throw new Error("Invalid postal index. Expected a postal index 5 digits long!");
-    }
-}
-
-function checkPaymentMethodSuitability(paymentMethod: string): void {
-    if (paymentMethod !== "cash" && paymentMethod !== "card" && paymentMethod !== "paypal") {
-        throw new Error("Invalid payment method. Expected one of the proposed payment methods.");
-    }
-}
-
-// ----------------------------------------
-
-interface Order {
+type threeFieldsObject = {
     name: string,
-    phoneNumber: string,
-    postalIndex: number,
-    paymentMethod: string
-}
-
-// ----------------------------------------
-
-try {
-    let name: string = prompt("Your name: ").trim();
-    checkNameSuitability(name);
-
-    let phoneNumber: string = prompt("Your full phone number(with country code): ").trim();
-    checkPhoneNumberSuitability(phoneNumber);
-
-    let postalIndex: number = Number(prompt("Your postal index: ").trim());
-    checkPostalIndexSuitability(postalIndex);
-
-    let paymentMethod: string = prompt("Your payment method(cash, card or paypal): ").trim();
-    checkPaymentMethodSuitability(paymentMethod);
-
-    const userOrder: Order = {
-        name: name,
-        phoneNumber: phoneNumber,
-        postalIndex: postalIndex,
-        paymentMethod: paymentMethod
-    };
-
-    console.log("\nYour order:");
-    ShowKeyValueStructure("Name", userOrder.name);
-    ShowKeyValueStructure("Phone number", userOrder.phoneNumber);
-    ShowKeyValueStructure("Postal index", userOrder.postalIndex);
-    ShowKeyValueStructure("Payment method", "by " + userOrder.paymentMethod);
-    console.log("~~~We hope everything right, but we don't really care~~~");
-} catch (Error) {
-    console.error("Error occurred: " + Error.message);
-}
-*/
+    genre: string,
+    trackCount: number
+};
+const threeFieldsObjects = bandsList.map((band: threeFieldsObject) => {
+    return {
+        name: band.name,
+        genre: band.genre,
+        trackCount: band.trackCount
+    }
+});
 
 // 3.
-
-/*
-function ShowKeyValueStructure(key: string, value: any): void {
-    console.log(key + ": " + value);
-}
-
-function checkNameSuitability(name: string): void {
-    if (!(name.length >= 2 && name.length <= 50)) {
-        throw new Error("Invalid name. Expected a name from 2 to 50 characters long!");
-    }
-}
-
-function checkEmailSuitability(email: string): void {
-    if (!(email.length > 8 && email.includes('@') && email.includes('.'))) {
-        throw new Error("Invalid email. Expected a valid email address!");
-    }
-}
-
-function checkEvaluationSuitability(grade: number): void {
-    if (!(grade >= 1 && grade <= 5)) {
-        throw new Error("Invalid grade. Expected a valid evaluation value!");
-    }
-}
-
-function checkReviewTextSuitability(text: string): void {
-    if (text.length === 0 || text.length > 300) {
-        throw new Error("Invalid review text! Expected a review from 1 to 300 characters long!");
-    }
-}
-
-// ----------------------------------------
-
-interface Review {
-    name: string,
-    email: string,
-    grade: number,
-    text: string
-}
-
-// ----------------------------------------
-
-try {
-    let name: string = prompt("Your name: ").trim();
-    checkNameSuitability(name);
-
-    let email: string = prompt("Your email: ").trim();
-    checkEmailSuitability(email);
-
-    let grade: number = Number(prompt("How do You evaluate product/place/service(1-5): ").trim());
-    checkEvaluationSuitability(grade);
-
-    let text: string = prompt("Describe Your evaluation(up to 300 characters): ").trim();
-    checkReviewTextSuitability(text);
-
-    const userReview: Review = {
-        name: name,
-        email: email,
-        grade: grade,
-        text: text
-    };
-
-    console.log("\nYour review:");
-    ShowKeyValueStructure("Name", userReview.name);
-    ShowKeyValueStructure("Email", userReview.email);
-    ShowKeyValueStructure("Evaluated grade", userReview.grade);
-    ShowKeyValueStructure("Description", userReview.text);
-    console.log("~~~We hope everything right, but we don't really care~~~");
-} catch (Error) {
-    console.error("Error occurred: " + Error.message);
-}
-*/
+const youngerThanZeroes: MusicBand[]  = bandsList.filter(band => band.foundedYear > 2000);
 
 // 4.
+const moreTracksThanHunid: MusicBand[]  = bandsList.filter(band => band.trackCount > 100);
 
-/*
-function convertTemperature(temperature: number, unit: string): Temperature {
-    if (unit === "C") {
-        return {
-            temperatureValue: (temperature * 9 / 5) + 32,
-            unit: "F"
+// 5.
+const RockNRolls: MusicBand[]  = bandsList.filter(band => band.genre === "Rock");
+
+// 6.
+const olderThanEighties: MusicBand[]  = bandsList.filter(band => band.foundedYear < 1980);
+
+// 7.
+const fromStates: MusicBand[] = bandsList.filter(band => band.originCountry === "USA");
+
+// 8.
+const allTracks: number = bandsList.reduce((accumulator, band) => {
+    return accumulator + band.trackCount;
+},0);
+
+// 9.
+const allMembers: number = bandsList.reduce((accumulator, band) => {
+    return accumulator + band.members.length;
+},0);
+
+// 10.
+let moreTracks: MusicBand = {
+    name: "",
+    genre: "",
+    members: [
+        {
+            name: "",
+            instrument: ""
         }
-    } else if (unit === "F") {
-        return {
-            temperatureValue: (temperature - 32) / 5 * 9,
-            unit: "C"
+    ],
+    originCountry: "",
+    foundedYear: 0,
+    trackCount: 0,
+}
+
+bandsList.forEach(band => {
+    if (band.trackCount > moreTracks.trackCount)
+        moreTracks = band;
+});
+
+// 11.
+const rockNAlts: MusicBand[] = bandsList.filter(band => band.genre === "Rock" || band.genre === "Alternative Rock");
+
+// 12.
+let longestName: BandMember = {
+    name: "",
+    instrument: ""
+};
+bandsList.forEach(band => {
+    band.members.forEach(member => {
+        if (member.name.trim().length > longestName.name.trim().length)
+            longestName = member;
+    })
+});
+
+// 13.
+bandsList.forEach(band => {
+    console.log(`${band.name} - ${band.foundedYear}`);
+})
+
+// 14.
+bandsList.forEach(band => {
+    if (band.members.length > 3)
+        console.log(`${band.name} has more than ${band.members.length} members`);
+})
+
+// 15.
+let uniqueGenres: string[] = [];
+bandsList.forEach(band => {
+    if (!uniqueGenres.includes(band.genre))
+        uniqueGenres.push(band.genre);
+})
+
+// 16.
+interface ICountryTracks {
+    [country: string]: number;
+}
+
+const countryTracks: ICountryTracks = bands.reduce((accumulator, band) => {
+    accumulator[band.originCountry] = (accumulator[band.originCountry] || 0) + band.trackCount;
+    return accumulator;
+}, {});
+
+// 17.
+let instruments = bandsList.map(band => {
+    return band.members.map(member => {
+        return member.instrument;
+    })
+})
+
+// 18.
+let uniqueInstruments: string[] = [];
+bandsList.forEach(band => {
+    band.members.forEach(member => {
+        if (!uniqueInstruments.includes(member.instrument)) {
+            uniqueInstruments.push(member.instrument);
         }
-    } else {
-        throw new Error("Invalid temperature unit \"" + unit + "\" of measurement.");
-    }
+    })
+})
 
-
-}
-function analyzeConvertTemperature(temperature: string): void {
-    let temperatureValue: number = Number(temperature.slice(0, temperature.length-2));
-    if (isNaN(temperatureValue) || temperatureValue === 0) {
-        throw new Error("Invalid temperature value");
-    }
-    let unit: string = temperature[temperature.length-1];
-
-    let convertedTemperature: Temperature = convertTemperature(temperatureValue, unit);
-
-    console.log(`Temperature in ${convertedTemperature.unit}: ${convertedTemperature.temperatureValue}`);
+// 19.
+interface ITitleAndNameLength {
+    [name: string]: number;
 }
 
-// ----------------------------------------
-
-interface Temperature {
-    temperatureValue: number;
-    unit: string;
-}
-
-// ----------------------------------------
-
-try {
-    let temperature: string = prompt("Temperature(e.g. 100 C, 32 F): ").trim()
-    analyzeConvertTemperature(temperature);
-} catch (Error) {
-    console.error("Error occurred: " + Error.message);
-}
-*/
+const titleAndNameLength: ITitleAndNameLength = bands.reduce((accumulator, band) => {
+    accumulator[band.name] = (accumulator[band.name] || 0) + band.members.reduce((accumulator, member) => {
+        return accumulator + member.name.trim().length;
+    }, 0);
+    return accumulator;
+}, {});
