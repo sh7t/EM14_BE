@@ -207,17 +207,251 @@ class LifeImitator {
             workers.forEach((worker) => {
                 worker.receiveSalary(worker.calculateSalary(worker.hours));
                 worker.resetHours();
-                console.log(`${worker.name} balance for now - ${worker.balance}`);
-
             });
-            console.log("-======================-");
         }
     }
-
 }
 // -==main==-
-const imitator = new LifeImitator();
-imitator.imitateYearCycle([...imitator.generateProfessors(3), ...imitator.generateStudents(10), ...imitator.generateStaffs(3)]);
+try {
+    const imitator = new LifeImitator();
+    imitator.imitateYearCycle([...imitator.generateProfessors(3), ...imitator.generateStudents(10), ...imitator.generateStaffs(3)]);
+} catch (error) {
+    console.log("Error: " + error.message);
+}
 
+// 2.
+class BreakdownError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "BreakdownError";
+    }
+}
 
+abstract class Vehicle {
+    // fields
+    public readonly _brand: string = "";
+    public readonly _model: string = "";
+    protected _maxCapacity: number = 0;
+    protected _fuelEfficiency: number = 0;
+    protected _reliability: number = 0;
+    protected _tariff: number = 0;
+
+    // init
+    constructor(brand: string, model: string) {
+        this._brand = brand;
+        this._model = model;
+        this.reliability = 100;
+    }
+    // get-n-set
+    get brand(): string {
+        return this._brand;
+    }
+    get model(): string {
+        return this._model;
+    }
+    get maxCapacity(): number {
+        return this._maxCapacity;
+    }
+    get fuelEfficiency(): number {
+        return this._fuelEfficiency;
+    }
+    set fuelEfficiency(value: number) {
+        if (ValidationHelper.isNonPositive(value)) { throw new Error("Fuel efficiency must be greater than zero."); }
+        if (this._fuelEfficiency > value) { throw new Error("Fuel efficiency can't decrease."); }
+        this._fuelEfficiency = value;
+    }
+    get reliability(): number {
+        return this._reliability;
+    }
+    set reliability(value: number) {
+        if (ValidationHelper.isNonPositive(value)) { throw new Error("Reliability must be greater than zero."); }
+        if (value > 100) { throw new Error("Reliability percentage can't be greater than hundred."); }
+        this._reliability = value;
+    }
+    get tariff() {
+        return this._tariff;
+    }
+    set tariff(value: number) {
+        if (ValidationHelper.isNonPositive(value)) { throw new Error("Tariff must be greater than zero."); }
+        this._tariff = value;
+    }
+
+    // functions
+    abstract calculateDeliveryCost(distance: number, cargoWeight: number): number
+
+    loadCargo(weight: number): void {
+        if (ValidationHelper.isNegative(weight)) { throw new Error("Cargo's weight can't be negative."); }
+        if (this.maxCapacity < weight) { throw new Error("Can't load more than capacity."); }
+    }
+
+    calculateFuelConsumption(distance: number): number {
+        if (ValidationHelper.isNonPositive(distance)) { throw new Error("Distance must be greater than zero."); }
+        if (Random.randomInteger(0, 100) > this.reliability) { throw new BreakdownError("Unreliable truck details failed critically."); }
+        return this.fuelEfficiency * distance;
+    }
+}
+class Truck extends Vehicle {
+    // fields
+    private static autoInc: number = 1;
+    public readonly id: number = 0;
+    protected _maxCapacity: number = 36000;
+    protected _fuelEfficiency: number = 0.1; // per km
+    protected _tariff: number = 5;
+    protected _additional: number = 0.1;
+
+    // init
+    constructor(brand: string, model: string) {
+        super(brand, model);
+        this.id = Truck.autoInc++;
+    }
+
+    // get-n-set
+    get additional() {
+        return this._additional;
+    }
+    set additional(value: number) {
+        if (ValidationHelper.isNegative(value)) { throw new Error("Additional cost can't be negative."); }
+        this._additional = value;
+    }
+
+    // functions
+
+    calculateDeliveryCost(distance: number, cargoWeight: number): number {
+        if (ValidationHelper.isNonPositive(distance)) { throw new Error("Distance must be greater than zero."); }
+        if (ValidationHelper.isNegative(cargoWeight)) { throw new Error("Cargo's weight can't be negative."); }
+        return roundCurrency(this.tariff * distance + this.additional * cargoWeight);
+    }
+}
+class Van extends Vehicle {
+    // fields
+    private static autoInc: number = 1;
+    public readonly id: number = 0;
+    protected _maxCapacity: number = 2000;
+    protected _fuelEfficiency: number = 0.07; // per km
+    protected _tariff: number = 3;
+    protected _additional: number = 0.2;
+
+    // init
+    constructor(brand: string, model: string) {
+        super(brand, model);
+        this.id = Van.autoInc++;
+    }
+
+    // get-n-set
+    get additional() {
+        return this._additional;
+    }
+    set additional(value: number) {
+        if (ValidationHelper.isNonPositive(value)) { throw new Error("Additional cost must be greater than zero."); }
+        this._additional = value;
+    }
+
+    // functions
+    calculateDeliveryCost(distance: number, cargoWeight: number): number {
+        if (ValidationHelper.isNonPositive(distance)) { throw new Error("Distance must be greater than zero."); }
+        if (ValidationHelper.isNegative(cargoWeight)) { throw new Error("Cargo's weight can't be negative."); }
+        return roundCurrency(this.tariff * distance + this.additional * cargoWeight);
+    }
+}
+class Drone extends Vehicle {
+    // fields
+    private static autoInc: number = 1;
+    public readonly id: number = 0;
+    protected _maxCapacity: number = 5;
+    protected _fuelEfficiency: number = 0.04; // per km
+    protected _tariff: number = 1;
+    protected _distanceToDouble: number = 50;
+
+    // init
+    constructor(brand: string, model: string) {
+        super(brand, model);
+        this.id = Drone.autoInc++;
+    }
+
+    // get-n-set
+    get distanceToDouble() {
+        return this._distanceToDouble;
+    }
+    set distanceToDouble(value: number) {
+        if (ValidationHelper.isNonPositive(value)) { throw new Error("Distance must be greater than zero."); }
+        this._distanceToDouble = value;
+    }
+
+    // functions
+    calculateDeliveryCost(distance: number, cargoWeight: number): number {
+        if (ValidationHelper.isNonPositive(distance)) { throw new Error("Distance must be greater than zero."); }
+        if (ValidationHelper.isNegative(cargoWeight)) { throw new Error("Cargo's weight must be greater than zero."); }
+        if (cargoWeight > this.maxCapacity) { throw new Error(`Cargo's weight can't be greater than ${this.brand} ${this.model} max capacity.`); }
+        if (distance < this.distanceToDouble) { return roundCurrency(this.tariff * distance); }
+        return roundCurrency(this.tariff * distance * 2);
+    }
+}
+class Company {
+    // fields
+    private static autoInc: number = 1;
+    public readonly id: number = 0;
+    private _name: string = "";
+    private _couriers: Vehicle[] = [new Truck("Ford", "F150"), new Van("Mercedes-Benz", "Sprinter"),
+                                   new Drone("Amazon", "Prime Air"), new Truck("Toyota", "Hilux"),
+                                   new Van("Volkswagen", "Transporter"), new Drone("DJI", "FlyCart 30")
+                                  ]
+    private _balance: number = 2000;
+    private _fuelPrice: number = 0.03; // per liter
+
+    // init
+    constructor(name: string) {
+        this.id = Company.autoInc++;
+        this.name = name;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+    set name(value: string) {
+        if (value.trim().length < 2) { throw new Error("Invalid name. Name has to be at least 2 characters!"); }
+        this._name = value;
+    }
+    get couriers(): Vehicle[] {
+        return this._couriers;
+    }
+    get balance() {
+        return this._balance;
+    }
+    set balance(value: number) {
+        if (ValidationHelper.isNegative(value)) { this._balance = 0; return; }
+        this._balance = value;
+    }
+    get fuelPrice() {
+        return this._fuelPrice;
+    }
+    set fuelPrice(value: number) {
+        if (ValidationHelper.isNonPositive(value)) {
+            throw new Error("Price must be greater than zero");
+        }
+        this._fuelPrice = value;
+    }
+}
+// -==main==-
+const rides = 100;
+const company = new Company("Chevron");
+for (let i= 0; i < rides; i++) {
+    company.couriers.forEach((courier: Vehicle) => {
+        try {
+            const randomWeight = Random.randomInteger(1, courier.maxCapacity);
+            const randomDistance = Random.randomInteger(1, 12345);
+
+            courier.loadCargo(randomWeight);
+
+            company.balance += courier.calculateDeliveryCost(randomDistance, randomWeight) - (courier.calculateFuelConsumption(randomDistance) * company.fuelPrice);
+        } catch (error) {
+            if (error.name === "BreakdownError") {
+                console.log("Breakdown Error: ", error.message);
+                company.balance -= Random.randomInteger(50, 2000);
+            } else {
+                console.error("Error: " + error.message);
+            }
+        }
+    })
+}
+console.log(`${company.name} balance for now is ${roundCurrency(company.balance)}!`);
 
